@@ -29,9 +29,10 @@ from modules.xxe import xxe_scan
 from modules.crlf import crlf_check
 from modules.security_headers_missing import security_headers_missing
 from core.zap_config import zap_start
-from multiprocessing import Process
+# from multiprocessing import Process
 from utils.db import Database_update
 from utils.email_cron import email_start_cron
+from threading import Thread
 
 
 if os.getcwd().split('/')[-1] != 'API':
@@ -73,7 +74,7 @@ def scan_postman_collection(file_name,scanid,new_url=None):
             else:
                 new_url = url
 
-            p = Process(target=modules_scan,args=(new_url,method,headers,body,scanid),name='module-scan')
+            p = Thread(target=modules_scan,args=(new_url,method,headers,body,scanid),name='module-scan')
             p.start()
 
         email_start_cron()
@@ -243,7 +244,7 @@ def scan_single_api(url, method, headers, body, api, scanid=None):
         return False
 
     if api == "Y":
-        p = Process(target=modules_scan,args=(url,method,headers,body,scanid),name='module-scan')
+        p = Thread(target=modules_scan,args=(url,method,headers,body,scanid),name='module-scan')
         p.start()
         if api == "Y":
             return True
