@@ -9,23 +9,16 @@
 		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:700, 600,500,400,300' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="{{ url_for('static', filename='main.css')}}">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')}}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-table.min.css') }}">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  		
-
-
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  		
 		<script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='scan.js') }}"></script>
-
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')}}">
-            <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-table.min.css') }}">
         <script src="{{ url_for('static', filename='jquery.min.js')}}"></script>
         <script src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
-            <script src="{{ url_for('static', filename='bootstrap-table.min.js') }}"></script>
-
-
-
+		<script src="{{ url_for('static', filename='bootstrap-table.min.js') }}"></script>
 	</head>
 	<body>
 		<div class="side-nav" id="side">
@@ -92,180 +85,180 @@
 
  
     <div class="main-content"> 
-			<div class="title"> 
-				Scanning Report
-			</div>
-			<div class="main"> 
-				<div class="widget"> 
-					<div class="title" id="scan-widget"><h4>Recent Scans:</h4></div> <br>
-          					
-                            <div class="container">
-                                <table id="table">
-                                <thead>
-                                    <tr>
-                                        <th data-field="id">No</th>
-                                        <th data-field="name">Product Name</th>
-                                        <th data-field="scanid">url</th>
-                                        <th data-field="scan_status">Status</th>
-
-                                    </tr>
-                                </thead>
-                            </table>
-                            </div>
-
-
-					<div class="chart"> 
-					</br>
-					 <script type="text/javascript">
-					 	loadDoc();
-
-                       function loadDoc()
-                       {
-                       	  if(location.hash)
-                       	  {
-                       	  	scanid = location.hash.substr(1);
-                       	  	var xhttp = new XMLHttpRequest();
-						  	xhttp.onreadystatechange = function() {
-						    if (this.readyState == 4 && this.status == 200)
-						     {
-						      
-							      data = this.responseText;
-							      data = JSON.parse(data);
-							     
-							      printResults(data);
-							      var div = document.getElementById("table");
-							      div.style.display = "none";
-							      var div = document.getElementById("scan-widget");
-							      div.style.display = "none";
-
-						    }
-						  };
-						 //xhttp.open("GET", "http://10.33.93.222:8099/alerts/", false);
-						  xhttp.open("GET", "/alerts/"+scanid, false);
-						  xhttp.send();
-                       	  }
-                       	  else
-                       	  {
-                       	  		//Show recent scans
-                       	  		recent_scans();
-                       	  }              
-						}
-
+		<div class="title"> 
+			Scanning Report
+		</div>
+		<div class="main"> 
+			<div class="widget"> 
+				<div class="title" id="scan-widget"><h4>Recent Scans:</h4></div> <br>
 						
-					function printResults(data){
+						<div class="container">
+							<table id="table">
+							<thead>
+								<tr>
+									<th data-field="id">No</th>
+									<th data-field="name">Product Name</th>
+									<th data-field="scanid">url</th>
+									<th data-field="scan_status">Status</th>
 
-					 	for (var i=0; i<data.length; i++) {
-							switch(data[i]["impact"].toString()) {
-							    case "Info":
-							        color = "green";
-							        break;
-							    case "Medium":
-							        color = "Orange";
-							        break;
-							    case "High":
-							        color = "red";
-							        break;
-							    default:
-							        color="";
-							}
+								</tr>
+							</thead>
+						</table>
+						</div>
 
-							document.write('<button style="width: 750px; text-align: left; background-color: '+color+'" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo_'+i.toString()+'">'+data[i]["name"].toString()+"&nbsp;in&nbsp;"+(data[i]["url"]).toString()+'</button></br></br>');
 
-					 	
-					 		document.write('<div id="demo_'+i.toString()+'" class="collapse"><div>\
-       					  	<label>Summary:</label>\
-       						<div><pre wrap width="3" style="word-wrap:break-word;">\
-       						\n<b>&nbsp;&nbsp;Name:</b>'+ (data[i]["name"]).toString()
-       						+"\n"+"<b>&nbsp;&nbsp;<br>&nbsp;&nbsp;"+"Impact:"+"</b>"+ (data[i]["impact"]).toString()
-       			            
-       						+"\n\n"+"<div class='col-sm-6'>"+"<b>"+"Request_Headers:"+"</b>"+"<div id='req_head_"+i.toString()+"'></div></div>"
+				<div class="chart"> 
+				</br>
+					<script type="text/javascript">
+					loadDoc();
 
-       						+"<div class='col-sm-6'>"+"<b>"+"Response_Headers:"+"</b>"+"<div id='res_head_"+i.toString()+"'></div></div><br>"		
-       						+"\n"+"<div class='col-sm-6'>"+"<b><br></b>"+"<div id='req_body_"+i.toString()+"'></div></div>"
-       						+"<div class='col-sm-6'>"+"<b><br></b>"+"<div id='res_body_"+i.toString()+"'></div></div>"
+					function loadDoc()
+					{
+						if(location.hash)
+						{
+						scanid = location.hash.substr(1);
+						var xhttp = new XMLHttpRequest();
+						xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200)
+							{
+							
+								data = this.responseText;
+								data = JSON.parse(data);
+								
+								printResults(data);
+								var div = document.getElementById("table");
+								div.style.display = "none";
+								var div = document.getElementById("scan-widget");
+								div.style.display = "none";
 
-       						+"&nbsp;<br><b>&nbsp;&nbsp;<br><br>&nbsp;&nbsp;Description:</b>"+ (data[i]["Description"]).toString()
-       						+"\n"+"&nbsp;<br><b>&nbsp;&nbsp;"+"Remidation:</b>"+(data[i]["remediation"]).toString()+'\
-       						</pre></div>\
-     					  </div><br/>\
-                     </div> ');
-					 		
-					 		printdata(i,data[i]);	
-							}
+						}
+						};
+						//xhttp.open("GET", "http://10.33.93.222:8099/alerts/", false);
+						xhttp.open("GET", "/alerts/"+scanid, false);
+						xhttp.send();
+						}
+						else
+						{
+							//Show recent scans
+							recent_scans();
+						}              
+					}
+
+					
+				function printResults(data){
+
+					for (var i=0; i<data.length; i++) {
+						switch(data[i]["impact"].toString()) {
+							case "Info":
+								color = "green";
+								break;
+							case "Medium":
+								color = "Orange";
+								break;
+							case "High":
+								color = "red";
+								break;
+							default:
+								color="";
 						}
 
+						document.write('<button style="width: 750px; text-align: left; background-color: '+color+'" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo_'+i.toString()+'">'+data[i]["name"].toString()+"&nbsp;in&nbsp;"+(data[i]["url"]).toString()+'</button></br></br>');
 
-                    	// Parsing HTTP request and response.  
-
-						function printdata(i,data){
+					
+						document.write('<div id="demo_'+i.toString()+'" class="collapse"><div>\
+						<label>Summary:</label>\
+						<div><pre wrap width="3" style="word-wrap:break-word;">\
+						\n<b>&nbsp;&nbsp;Name:</b>'+ (data[i]["name"]).toString()
+						+"\n"+"<b>&nbsp;&nbsp;<br>&nbsp;&nbsp;"+"Impact:"+"</b>"+ (data[i]["impact"]).toString()
 						
-							req_headers = data['req_headers'];
-							res_headers = data['res_headers'];
-							req_body = data['req_body'];
-							res_body = data['res_body'];
+						+"\n\n"+"<div class='col-sm-6'>"+"<b>"+"Request_Headers:"+"</b>"+"<div id='req_head_"+i.toString()+"'></div></div>"
 
-							// console.log(headers);
+						+"<div class='col-sm-6'>"+"<b>"+"Response_Headers:"+"</b>"+"<div id='res_head_"+i.toString()+"'></div></div><br>"		
+						+"\n"+"<div class='col-sm-6'>"+"<b><br></b>"+"<div id='req_body_"+i.toString()+"'></div></div>"
+						+"<div class='col-sm-6'>"+"<b><br></b>"+"<div id='res_body_"+i.toString()+"'></div></div>"
 
-                  
+						+"&nbsp;<br><b>&nbsp;&nbsp;<br><br>&nbsp;&nbsp;Description:</b>"+ (data[i]["Description"]).toString()
+						+"\n"+"&nbsp;<br><b>&nbsp;&nbsp;"+"Remidation:</b>"+(data[i]["remediation"]).toString()+'\
+						</pre></div>\
+						</div><br/>\
+					</div> ');
+						
+						printdata(i,data[i]);	
+						}
+					}
 
-							if(typeof(req_headers) == "string")
-							{
 
-								document.getElementById('req_head_'+i.toString()).innerHTML += req_headers;
+					// Parsing HTTP request and response.  
+
+					function printdata(i,data){
+					
+						req_headers = data['req_headers'];
+						res_headers = data['res_headers'];
+						req_body = data['req_body'];
+						res_body = data['res_body'];
+
+						// console.log(headers);
+
+				
+
+						if(typeof(req_headers) == "string")
+						{
+
+							document.getElementById('req_head_'+i.toString()).innerHTML += req_headers;
+						}
+						else{
+							for (ele in req_headers){
+
+								document.getElementById('req_head_'+i.toString()).innerHTML += ele+" : "+req_headers[ele]+"<br>";
 							}
-							else{
-								for (ele in req_headers){
+						}
 
-									document.getElementById('req_head_'+i.toString()).innerHTML += ele+" : "+req_headers[ele]+"<br>";
-								}
+
+						if(typeof(res_headers) == "string")
+						{
+
+							document.getElementById('res_head_'+i.toString()).innerHTML += res_headers;
+						}
+						else{
+							for (ele in res_headers){
+
+								document.getElementById('res_head_'+i.toString()).innerHTML += ele+" : "+res_headers[ele]+"<br>";
 							}
+						}
 
 
-                            if(typeof(res_headers) == "string")
-							{
+						if(typeof(req_body) == "string")
+						{
 
-								document.getElementById('res_head_'+i.toString()).innerHTML += res_headers;
-							}
-							else{
-								for (ele in res_headers){
-
-									document.getElementById('res_head_'+i.toString()).innerHTML += ele+" : "+res_headers[ele]+"<br>";
-								}
-							}
-
-
-							if(typeof(req_body) == "string")
-							{
-
-								document.getElementById('req_body_'+i.toString()).innerText += req_body;
-							}
-							else if(typeof(req_body) == "object")
-							{
-								document.getElementById('req_body_'+i.toString()).innerHTML += JSON.stringify(req_body);
-
-							}
-
-
-
-							if(typeof(res_body) == "string")
-							{
-
-								document.getElementById('res_body_'+i.toString()).innerHTML += res_body;
-							}
-							else if(typeof(res_body) == "object")
-							{
-								document.getElementById('res_body_'+i.toString()).innerHTML += JSON.stringify(res_body);
-
-							}
+							document.getElementById('req_body_'+i.toString()).innerText += req_body;
+						}
+						else if(typeof(req_body) == "object")
+						{
+							document.getElementById('req_body_'+i.toString()).innerHTML += JSON.stringify(req_body);
 
 						}
-					 
-					</script> 
-                     
-					</div> 
+
+
+
+						if(typeof(res_body) == "string")
+						{
+
+							document.getElementById('res_body_'+i.toString()).innerHTML += res_body;
+						}
+						else if(typeof(res_body) == "object")
+						{
+							document.getElementById('res_body_'+i.toString()).innerHTML += JSON.stringify(res_body);
+
+						}
+
+					}
+					
+				</script> 
+					
 				</div> 
 			</div> 
 		</div> 
+	</div> 
 
 
      
