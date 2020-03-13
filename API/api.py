@@ -21,7 +21,8 @@ from flask import Flask, render_template, send_from_directory
 from flask import Response, make_response
 from flask import request
 from flask import Flask
-from flask import jsonify
+from flask import Response
+# from flask_json import FlaskJSON, JsonError, json_response, as_json
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 
@@ -38,6 +39,7 @@ sys.path.append(os.path.join(SCRIPT_PATH,'..'))
 from astra import *
 
 app = Flask(__name__, template_folder='../Dashboard/templates', static_folder='../Dashboard/static')
+# FlaskJSON(app)
 
 
 class ServerThread(threading.Thread):
@@ -48,7 +50,7 @@ class ServerThread(threading.Thread):
   def run(self):
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-    app.run(host='0.0.0.0', port= 8094)
+    app.run(host='0.0.0.0', port= 19090)
 
 
 db_object = db_connect()
@@ -99,16 +101,23 @@ def start_scan():
     except:
         msg = {"status" : "Failed"} 
     
-    return jsonify(msg)
+    # return jsonify(msg)
+    return app.response_class(
+        response=json.dumps(msg),
+        status=200,
+        mimetype='application/json'
+    )
 
 
 @app.route('/scan/scanids/', methods=['GET'])
 def fetch_scanids():
     scanids = []
     records = db.scanids.find({})
+    dados = {}
     if records:
         for data in records:
             data.pop('_id')
+            dados =  ast.literal_eval(json.dumps(data))
             try:
                 data =  ast.literal_eval(json.dumps(data))
                 scan_status = check_scan_status(data)
@@ -119,7 +128,13 @@ def fetch_scanids():
             except:
                 pass
 
-        return jsonify(scanids)
+        
+        return app.response_class(
+            response=json.dumps(scanids),
+            status=200,
+            mimetype='application/json'
+        )
+        
 
 ############################# Alerts API ##########################################
 
@@ -170,7 +185,12 @@ def fetch_records(scanid):
 @app.route('/alerts/<scanid>', methods=['GET'])
 def return_alerts(scanid):
     result = fetch_records(scanid)
-    resp = jsonify(result)
+    resp = app.response_class(
+        response=json.dumps(result),
+        status=200,
+        mimetype='application/json'
+    )
+    
     resp.headers["Access-Control-Allow-Origin"] = "*"
     return resp
 
@@ -182,7 +202,7 @@ def view_dashboard(page):
     return render_template('{}'.format(page))
 
 def start_server():
-    app.run(host='0.0.0.0', port= 8094)
+    app.run(host='0.0.0.0', port= 19090)
 
 
 ############################Postman collection################################
@@ -267,7 +287,11 @@ def scan_postman():
     except:
         msg = {"status" "Failed. Application name and postman URL is required!"}
 
-    return jsonify(msg)
+    return app.response_class(
+        response=json.dumps(msg),
+        status=200,
+        mimetype='application/json'
+    )
 
 def main():
     if os.getcwd().split('/')[-1] == 'API':
