@@ -50,7 +50,7 @@ class ServerThread(threading.Thread):
   def run(self):
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-    app.run(host='0.0.0.0', port= 19090)
+    app.run(host='0.0.0.0', port= 8094)
 
 
 db_object = db_connect()
@@ -202,7 +202,7 @@ def view_dashboard(page):
     return render_template('{}'.format(page))
 
 def start_server():
-    app.run(host='0.0.0.0', port= 19090)
+    app.run(host='0.0.0.0', port= 8094)
 
 
 ############################Postman collection################################
